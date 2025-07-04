@@ -1,0 +1,15 @@
+# Changes here will be overwritten by Copier
+_commit: v0.47.0
+_src_path: gh:FollowTheProcess/go-template
+author_email: me@followtheprocess.codes
+author_name: Tom Fleet
+dependency_bot: renovate
+description: A modern alternative to dig, written in Go
+github_url: https://github.com/FollowTheProcess/dns
+github_username: FollowTheProcess
+license: Apache Software License 2.0
+linter: staticcheck
+module_path: go.followtheprocess.codes/dns
+project_name: dns
+project_slug: dns
+project_type: binary

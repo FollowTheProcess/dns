@@ -1,0 +1,81 @@
+version: 2
+
+project_name: dns
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: dns
+    dir: "."
+    main: "."
+    binary: dns
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - "386"
+      - amd64
+      - arm64
+    goarm:
+      - "7"
+
+homebrew_casks:
+  - name: dns
+    binary: dns
+    directory: Casks
+    description: A modern alternative to dig, written in Go
+    homepage: https://github.com/FollowTheProcess/dns
+    commit_author:
+      name: Tom Fleet
+      email: me@followtheprocess.codes
+    repository:
+      owner: FollowTheProcess
+      name: homebrew-tap
+      token: "{{.Env.HOMEBREW_TAP_TOKEN}}"
+    hooks:
+      post:
+        install: |
+          if system_command("/usr/bin/xattr", args: ["-h"]).exit_status == 0
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/dns"]
+          end
+
+archives:
+  - id: dns
+    name_template: >-
+      {{ .ProjectName }}-
+      {{- .Version }}-
+      {{- .Os }}-
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+
+sboms:
+  - id: dns
+    artifacts: archive
+    documents:
+      - >-
+        {{ .ProjectName }}-
+        {{- .Version }}-
+        {{- .Os }}-
+        {{- if eq .Arch "amd64" }}x86_64
+        {{- else if eq .Arch "386" }}i386
+        {{- else }}{{ .Arch }}{{ end }}.sbom
+
+checksum:
+  name_template: checksums.txt
+
+snapshot:
+  version_template: "{{ .Tag }}-dev{{ .ShortCommit }}"
+
+changelog:
+  # The changelog is handled by release drafter
+  disable: true
