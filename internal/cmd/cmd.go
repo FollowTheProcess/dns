@@ -2,11 +2,11 @@
 package cmd
 
 import (
-	"fmt"
 	"net"
 	"time"
 
 	"go.followtheprocess.codes/cli"
+	"go.followtheprocess.codes/dns/internal/dns"
 )
 
 var (
@@ -32,17 +32,9 @@ The query, by default, will ask for A records from the name server. This may be 
 or all records requested with the '--all' flag.
 `
 
-// Options represents the flags passed to dns.
-type Options struct {
-	RecordType string        // The --type flag, one of 'A', 'AAAA' etc.
-	Server     net.IP        // The --server flag
-	Timeout    time.Duration // The maximum time to wait for a DNS response
-	All        bool          // Request all records, overrides --type
-}
-
 // Build returns the root dns CLI command.
 func Build() (*cli.Command, error) {
-	var options Options
+	var options dns.Options
 	return cli.New(
 		"dns",
 		cli.Short("DNS query cli tool, a modern alternative to dig"),
@@ -54,9 +46,10 @@ func Build() (*cli.Command, error) {
 		cli.Flag(&options.RecordType, "type", cli.NoShortHand, "A", "The type of record to query for"),
 		cli.Flag(&options.Server, "server", cli.NoShortHand, net.ParseIP("1.1.1.1"), "The address of the name server"),
 		cli.Flag(&options.Timeout, "timeout", cli.NoShortHand, defaultTimeout, "The maximum time to wait for a DNS response"),
+		cli.Flag(&options.Debug, "debug", cli.NoShortHand, false, "Emit debug logs"),
 		cli.Run(func(cmd *cli.Command, args []string) error {
-			fmt.Println("Hello")
-			return nil
+			app := dns.New(cmd.Stdout(), cmd.Stderr(), options.Debug)
+			return app.Run(cmd.Arg("target"), options)
 		}),
 	)
 }
