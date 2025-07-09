@@ -9,12 +9,15 @@ before:
 builds:
   - id: dns
     dir: "."
-    main: "."
+    main: "./cmd/dns"
     binary: dns
     flags:
       - -trimpath
     ldflags:
       - -s -w
+      - -X go.followtheprocess.codes/dns/internal/cmd.version={{.Version}}
+      - -X go.followtheprocess.codes/dns/internal/cmd.commit={{.Commit}}
+      - -X go.followtheprocess.codes/dns/internal/cmd.date={{.Date}}
     env:
       - CGO_ENABLED=0
     goos:
