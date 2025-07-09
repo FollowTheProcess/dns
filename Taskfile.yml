@@ -10,7 +10,7 @@ tasks:
     desc: List all available tasks
     silent: true
     internal: true
-    cmds: 
+    cmds:
       - task --list
 
   tidy:
@@ -36,7 +36,7 @@ tasks:
       - go.mod
       - go.sum
       - "**/testdata/**/*"
-    cmds: 
+    cmds:
       - go test -race ./... {{ .CLI_ARGS }}
 
   build:
@@ -57,22 +57,22 @@ tasks:
     desc: Run all project benchmarks
     sources:
       - "**/*.go"
-    cmds: 
+    cmds:
       - go test ./... -run None -benchmem -bench . {{ .CLI_ARGS }}
 
   lint:
     desc: Run linting
     sources:
       - "**/*.go"
-      - staticcheck.conf
+      - .golangci.yml
     preconditions:
-      - sh: command -v staticcheck
-        msg: staticcheck not installed, see https://staticcheck.dev/docs/getting-started/
+      - sh: command -v golangci-lint
+        msg: golangci-lint not installed, run `brew install golangci-lint`
 
       - sh: command -v typos
         msg: requires typos-cli, run `brew install typos-cli`
     cmds:
-      - staticcheck ./...
+      - golangci-lint run
       - typos
 
   doc:
@@ -99,7 +99,7 @@ tasks:
 
   sloc:
     desc: Print lines of code
-    cmds: 
+    cmds:
       - fd . -e go | xargs wc -l | sort -nr | head
 
   clean:
@@ -126,4 +126,3 @@ tasks:
     desc: Uninstall the project from your machine
     cmds:
       - rm -rf $GOBIN/dns
-  

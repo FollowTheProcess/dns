@@ -1,0 +1,4 @@
+[default.extend-words]
+byt = "byt"           # Useful name as byte is a keyword in go
+typ = "typ"           # Same
+decorder = "decorder" # The name of a go linter
