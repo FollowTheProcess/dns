@@ -4,6 +4,7 @@ go 1.24
 
 require (
 	go.followtheprocess.codes/cli v0.14.0
+	go.followtheprocess.codes/log v0.3.0
 	go.followtheprocess.codes/msg v1.9.1
 )
 
