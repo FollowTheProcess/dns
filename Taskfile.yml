@@ -64,15 +64,15 @@ tasks:
     desc: Run linting
     sources:
       - "**/*.go"
-      - .golangci.yml
+      - staticcheck.conf
     preconditions:
-      - sh: command -v golangci-lint
-        msg: golangci-lint not installed, run `brew install golangci-lint`
+      - sh: command -v staticcheck
+        msg: staticcheck not installed, run `brew install staticcheck`
 
       - sh: command -v typos
         msg: requires typos-cli, run `brew install typos-cli`
     cmds:
-      - golangci-lint run
+      - staticcheck ./...
       - typos
 
   doc:
